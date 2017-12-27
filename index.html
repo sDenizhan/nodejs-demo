@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hello World</title>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            var socket = io.connect('http://localhost:8080');
+            $('form').on('submit', function (e) {
+                e.preventDefault();
+                var data = {
+                    miktar : $('#miktar').val(),
+                    adet : $('#adet').val(),
+                    tutar : $('#tutar').val()
+                };
+                socket.emit('news', data);
+            });
+
+            socket.on('news', function (data) {
+                console.log(data);
+                var tr = '<tr><td>'+ data.miktar +'</td><td>'+ data.adet +'</td><td>'+ data.tutar+'</td></tr>';
+                $('tr#header').after(tr);
+            });
+        });
+    </script>
+</head>
+<body>
+
+<form method="post" action="">
+
+    <p>Miktar:<br />
+        <input type="text" name="miktar" id="miktar">
+    </p>
+
+    <p>Adet:<br />
+        <input type="text" name="adet" id="adet">
+    </p>
+
+    <p>Tutar:<br />
+        <input type="text" name="tutar" id="tutar">
+    </p>
+
+    <p><button type="submit">Kaydet</button></p>
+
+</form>
+
+<h1>Alış Emirleri</h1>
+
+<div id="emirler">
+    <table width="100%" id="emirTable">
+        <tr id="header">
+            <td>Miktar</td>
+            <td>Adet</td>
+            <td>Tutar</td>
+        </tr>
+    </table>
+</div>
+
+</body>
+</html>
